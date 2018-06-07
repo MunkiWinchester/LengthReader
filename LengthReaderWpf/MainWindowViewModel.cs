@@ -57,7 +57,7 @@ namespace LengthReaderWpf
             IsLoading = true;
             await Task.Run(() =>
             {
-                var dir = new DirectoryInfo(@"D:\Users\eikes\Videos");
+                var dir = new DirectoryInfo(@"E:\");
                 var files = dir.GetFiles("*.*", SearchOption.AllDirectories).ToList()
                     .Where(f => new[] {".mkv", ".avi", ".mp4", ".mpg", ".ts"}.Contains(f.Extension)).ToList();
                 var count = 0;

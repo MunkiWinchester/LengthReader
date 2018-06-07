@@ -12,9 +12,9 @@ namespace LengthReaderWpf
         public MainWindow()
         {
             InitializeComponent();
-            VlcControl.MediaPlayer.VlcLibDirectory =
-                new DirectoryInfo(@"c:\Program Files (x86)\VideoLAN\VLC\");
-            VlcControl.MediaPlayer.EndInit();
+            //VlcControl.MediaPlayer.VlcLibDirectory =
+            //    new DirectoryInfo(@"c:\Program Files (x86)\VideoLAN\VLC\");
+            //VlcControl.MediaPlayer.EndInit();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
