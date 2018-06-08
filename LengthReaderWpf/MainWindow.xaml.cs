@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Windows;
-
-namespace LengthReaderWpf
+﻿namespace LengthReaderWpf
 {
     /// <inheritdoc cref="MahApps.Metro.Controls.MetroWindow" />
     /// <summary>
@@ -12,15 +9,6 @@ namespace LengthReaderWpf
         public MainWindow()
         {
             InitializeComponent();
-            //VlcControl.MediaPlayer.VlcLibDirectory =
-            //    new DirectoryInfo(@"c:\Program Files (x86)\VideoLAN\VLC\");
-            //VlcControl.MediaPlayer.EndInit();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is MainWindowViewModel vm)
-                vm.LoadDataAsync();
         }
     }
 }

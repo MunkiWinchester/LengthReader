@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using MediaToolkit;
+using MediaToolkit.Model;
 
 namespace LengthReaderWpf
 {
@@ -11,7 +12,7 @@ namespace LengthReaderWpf
         {
             try
             {
-                var inputFile = new MediaToolkit.Model.MediaFile { Filename = fileInfo.FullName };
+                var inputFile = new MediaFile {Filename = fileInfo.FullName};
                 using (var engine = new Engine())
                 {
                     engine.GetMetadata(inputFile);

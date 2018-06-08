@@ -14,8 +14,19 @@ namespace LengthReaderWpf
     {
         private ObservableCollection<Data> _dataList;
         private bool _isLoading;
-        private bool _isPlayingVideo;
+        private string _path = @"E:\";
         private string _subMessage;
+
+        public MainWindowViewModel()
+        {
+            DataList = new ObservableCollection<Data>();
+        }
+
+        public string Path
+        {
+            get => _path;
+            set => SetField(ref _path, value);
+        }
 
         public ObservableCollection<Data> DataList
         {
@@ -35,43 +46,40 @@ namespace LengthReaderWpf
             set => SetField(ref _isLoading, value);
         }
 
-        public MainWindowViewModel()
-        {
-            DataList = new ObservableCollection<Data>();
-        }
+        public RelayCommand<object> PlayFileCommand =>
+            new RelayCommand<object>(obj =>
+            {
+                if (obj is Data data)
+                    Process.Start(data.FileInfo.FullName);
+            });
 
-        public RelayCommand<object> PlayFileCommand => new RelayCommand<object>(obj =>
-        {
-            if (obj is Data data)
-                Process.Start(data.FileInfo.FullName);
-        });
-
-        public bool IsPlayingVideo
-        {
-            get => _isPlayingVideo;
-            set => SetField(ref _isPlayingVideo, value);
-        }
+        public DelegateCommand LoadFilesCommand => new DelegateCommand(LoadDataAsync);
 
         public async void LoadDataAsync()
         {
             IsLoading = true;
+            DataList.Clear();
             await Task.Run(() =>
             {
-                var dir = new DirectoryInfo(@"E:\");
-                var files = dir.GetFiles("*.*", SearchOption.AllDirectories).ToList()
-                    .Where(f => new[] {".mkv", ".avi", ".mp4", ".mpg", ".ts"}.Contains(f.Extension)).ToList();
-                var count = 0;
-                foreach (var fileInfo in files)
+                if (Directory.Exists(Path))
                 {
-                    var info = Business.GetVideoInfo(fileInfo, dir);
-                    if (info != null)
+                    var dir = new DirectoryInfo(Path);
+                    var files = dir.GetFiles("*.*", SearchOption.AllDirectories).ToList()
+                        .Where(f => new[] {".mkv", ".avi", ".mp4", ".mpg", ".ts", ".m4v"}.Contains(f.Extension))
+                        .ToList();
+                    var count = 0;
+                    foreach (var fileInfo in files)
                     {
-                        Console.WriteLine(info);
-                        Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+                        var info = Business.GetVideoInfo(fileInfo, dir);
+                        if (info != null)
                         {
-                            SubMessage = $"{++count} of {files.Count} loaded..";
-                            DataList.Add(info);
-                        }));
+                            Console.WriteLine(info);
+                            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+                            {
+                                SubMessage = $"{++count} of {files.Count} loaded..";
+                                DataList.Add(info);
+                            }));
+                        }
                     }
                 }
             }).ContinueWith(t => { IsLoading = false; });

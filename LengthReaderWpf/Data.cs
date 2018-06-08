@@ -22,5 +22,6 @@ namespace LengthReaderWpf
 
         public override string ToString() =>
             $"{FileInfo.FullName} - {Width}x{Height} - {Duration:g}";
+        }
     }
 }
