@@ -14,7 +14,7 @@ namespace LengthReaderWpf
     {
         private ObservableCollection<Data> _dataList;
         private bool _isLoading;
-        private string _path = @"E:\";
+        private string _path = @"D:\";
         private string _subMessage;
 
         public MainWindowViewModel()
@@ -63,14 +63,11 @@ namespace LengthReaderWpf
             {
                 if (Directory.Exists(Path))
                 {
-                    var dir = new DirectoryInfo(Path);
-                    var files = dir.GetFiles("*.*", SearchOption.AllDirectories).ToList()
-                        .Where(f => new[] {".mkv", ".avi", ".mp4", ".mpg", ".ts", ".m4v"}.Contains(f.Extension))
-                        .ToList();
+					var files = Business.GetFileInfos(Path);
                     var count = 0;
                     foreach (var fileInfo in files)
                     {
-                        var info = Business.GetVideoInfo(fileInfo, dir);
+                        var info = Business.GetVideoInfo(fileInfo);
                         if (info != null)
                         {
                             Console.WriteLine(info);
@@ -81,7 +78,12 @@ namespace LengthReaderWpf
                             }));
                         }
                     }
-                }
+					if (!DataList.Any())
+						Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+						{
+							DataList.Add(new Data(new FileInfo(@"D:\Dump\deadpool-2016.mp4"), 1920, 1080, new TimeSpan(1, 49, 0), @"D:\Dump\", tag: Business.ReadMetaDatas(@"D:\Dump\deadpool-2016.mp4")));
+						}));
+				}
             }).ContinueWith(t => { IsLoading = false; });
         }
     }
